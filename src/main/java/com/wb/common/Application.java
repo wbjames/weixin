@@ -15,4 +15,5 @@ public class Application {
 	
 	public static String defaultDBKey;
 	
+	public static String token;
 }

@@ -45,6 +45,7 @@ public class ApplicationInitListener implements ServletContextListener {
 		Application.APP_NAME = properties.getProperty("app_name");
 		Application.defaultDBName = properties.getProperty("db_name");
 		Application.defaultDBKey = properties.getProperty("db_key");
+		Application.token = properties.getProperty("token");
 	}
 
 }
