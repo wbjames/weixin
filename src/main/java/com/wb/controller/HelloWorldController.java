@@ -33,6 +33,7 @@ public class HelloWorldController {
 			System.out.println(m.get("username"));
 		}
 		
+		
 		mv.addObject("message", message);
 		
 		return mv;
