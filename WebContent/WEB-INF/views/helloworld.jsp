@@ -10,7 +10,7 @@
 	<center>
 		<h2>Hello World</h2>
 		<h2>
-			${message} ${name}
+			${message} - ${name}
 		</h2>
 	</center>
 </body>
