@@ -2,10 +2,7 @@ package com.wb.business.wxMsgHandler;
 
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-
-import com.wb.business.wxUtils.ConvertUtils;
 
 /**
  * <p>Title: EventMsgHandler</p>
@@ -23,15 +20,7 @@ public class EventMsgHandler {
 		newMap.put("Content", result.get("Event") + "---此条回复来自服务器");
 		newMap.put("CreateTime", (new Date().getTime())/1000 + "");
 		
-		List<Map<String, String>> list = ConvertUtils.convertArrayToList(new String[]{
-				"ToUserName",
-				"FromUserName",
-				"CreateTime",
-				"MsgType",
-				"Content"}, newMap);
 		
-		String xmlStr = ConvertUtils.makeXml(list);
-		
-		return xmlStr;
+		return ReturnMsg.returnTextMsg(newMap);
 	}
 }

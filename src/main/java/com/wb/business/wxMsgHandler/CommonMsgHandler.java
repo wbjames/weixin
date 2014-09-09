@@ -52,14 +52,7 @@ public class CommonMsgHandler {
 		newMap.put("Content", result.get("Content") + "---此条回复来自服务器");
 		newMap.put("CreateTime", (new Date().getTime())/1000 + "");
 		
-		List<Map<String, String>> list = ConvertUtils.convertArrayToList(new String[]{
-				"ToUserName",
-				"FromUserName",
-				"CreateTime",
-				"MsgType",
-				"Content"}, newMap);
-		
-		String xmlStr = ConvertUtils.makeXml(list);
+		String xmlStr = ReturnMsg.returnTextMsg(newMap);
 		
 		
 		if(xmlStr != null){
