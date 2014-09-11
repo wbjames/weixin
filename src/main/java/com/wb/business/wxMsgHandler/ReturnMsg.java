@@ -1,5 +1,6 @@
 package com.wb.business.wxMsgHandler;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -31,5 +32,17 @@ public class ReturnMsg {
 		String xmlStr = ConvertUtils.makeXml(list);
 		
 		return xmlStr;
+	}
+	
+	public static Map<String, String> setTextMsgMap(String ToUserName,String FromUserName, 
+			Object CreateTime, String MsgType, String Content){
+		
+		Map<String, String> newMap = new HashMap<String, String>();
+		newMap.put("FromUserName", FromUserName);
+		newMap.put("ToUserName", ToUserName);
+		newMap.put("MsgType", MsgType);
+		newMap.put("CreateTime", CreateTime.toString());
+		newMap.put("Content", Content);
+		return newMap ;
 	}
 }

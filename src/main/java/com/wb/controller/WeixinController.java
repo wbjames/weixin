@@ -84,7 +84,7 @@ public class WeixinController {
 	* @param body
 	* @return
 	 */
-	@RequestMapping(value = "/wx", params = "!event", produces = "application/xml;charset=UTF-8", method = RequestMethod.POST)
+	@RequestMapping(value = "/wx", produces = "application/xml;charset=UTF-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String doPost(WebRequest request, @RequestBody String body){
 		System.out.println("＝＝＝＝＝＝＝＝＝＝＝＝＝＝Post");

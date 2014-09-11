@@ -8,7 +8,8 @@ import net.sf.json.JSONObject;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.FileEntity;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
@@ -25,7 +26,7 @@ public class MediaUtils {
 
 	Logger log = Logger.getLogger(this.getClass().getName());
 	
-	public String upload(String accessToken, String type, File media) throws Exception {
+	public String upload(String accessToken, String type, File file) throws Exception {
 		
 		CloseableHttpClient httpclient = HttpClients.createDefault(); 
 		
@@ -33,9 +34,14 @@ public class MediaUtils {
         		"?access_token=" + AppBean._accessToken +
         		"&type=" + type);
         
-        FileEntity fileentity = new FileEntity(media);
+        HttpEntity httpEntity = MultipartEntityBuilder.create()
+//        	    .addBinaryBody("file", file, ContentType.create("image/jpeg"), file.getName())
+        		.addBinaryBody("file", file)
+        	    .build();
         
-        httppost.setEntity(fileentity);
+        //FileEntity fileentity = new FileEntity(media);
+        
+        httppost.setEntity(httpEntity);
         
         CloseableHttpResponse response = httpclient.execute(httppost);
 		

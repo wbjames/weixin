@@ -37,8 +37,8 @@ public class GetAccessTokenTask extends TimerTask{
 				AppBean._accessToken = token;
 			}
 			
-			String s = new MediaUtils().upload(token, "image", new File(getClass().getResource("/").getPath() +"/touxiang.jpg"));
-			System.out.println(s);
+			//String s = new MediaUtils().upload(token, "image", new File(getClass().getResource("/").getPath() +"/touxiang.jpg"));
+			//System.out.println(s);
 			
 		} catch (Exception e) {
 			e.printStackTrace();
