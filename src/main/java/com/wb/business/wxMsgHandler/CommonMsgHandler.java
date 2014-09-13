@@ -53,7 +53,7 @@ public class CommonMsgHandler {
 		
 		String xmlStr = null;
 		switch (_content) {
-			case "lt":{
+			case "lt":{ //请求聊天
 				UserInfo ui = new UserInfo();
 				ui.userId = _fromId;
 				ui.fromId = _toId;
@@ -61,7 +61,7 @@ public class CommonMsgHandler {
 				
 				break;
 			}
-			case "tc":{
+			case "tc":{ //退出聊天
 				UserInfo ui = new UserInfo();
 				ui.userId = _fromId;
 				ui.fromId = _toId;
@@ -182,7 +182,7 @@ public class CommonMsgHandler {
 	}
 	
 	
-	private static void insertTextMsgToDB(Map<String, String> result){
+	public static void insertTextMsgToDB(Map<String, String> result){
 		cachedThreadPool.execute(new Runnable() {
 			
 			@Override
@@ -206,7 +206,7 @@ public class CommonMsgHandler {
 		});
 	}
 	
-	private static void updateResponseToDB(Long msgId){
+	public static void updateResponseToDB(Long msgId){
 		cachedThreadPool.execute(new Runnable() {
 
 			@Override

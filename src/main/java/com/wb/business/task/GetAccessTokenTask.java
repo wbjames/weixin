@@ -13,6 +13,7 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 
 import com.wb.business.basedata.AppBean;
+import com.wb.business.wxMsgHandler.EventMsgHandler;
 
 /**
  * <p>Title: GetAccessTokenTask</p>
@@ -33,6 +34,8 @@ public class GetAccessTokenTask extends TimerTask{
 			
 			//String s = new MediaUtils().upload(token, "image", new File(getClass().getResource("/").getPath() +"/touxiang.jpg"));
 			//System.out.println(s);
+			//Thread.sleep(2000);
+			//EventMsgHandler.saveUserInfoToDB("o3nDIjlamLDcpeRIXxAYZ8_3fwBg", "gh_47e2bcb932e0");
 			
 		} catch (Exception e) {
 			e.printStackTrace();
