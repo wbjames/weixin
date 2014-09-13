@@ -1,11 +1,14 @@
 package com.wb.business.basedata;
 
 import java.util.Timer;
+import java.util.concurrent.TimeUnit;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
+import com.wb.business.chatroom.ChatManager;
 import com.wb.business.task.GetAccessTokenTask;
+import com.wb.business.wxMsgHandler.CommonMsgHandler;
 
 /**
  * 
@@ -18,8 +21,16 @@ public class StartInitListener implements ServletContextListener {
 
 	@Override
 	public void contextDestroyed(ServletContextEvent arg0) {
-		// do nothing
-
+		CommonMsgHandler.cachedThreadPool.shutdown();
+		try {
+			if(CommonMsgHandler.cachedThreadPool.awaitTermination(10, TimeUnit.SECONDS) == false){
+				CommonMsgHandler.cachedThreadPool.shutdownNow();
+			}
+		} catch (InterruptedException e) {
+			
+			e.printStackTrace();
+		}
+		System.out.println("CommonMsgHandler.cachedThreadPool is shutdown!");
 	}
 
 	@Override

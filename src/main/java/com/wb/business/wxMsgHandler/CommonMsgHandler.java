@@ -1,16 +1,18 @@
 package com.wb.business.wxMsgHandler;
 
 import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
-import org.apache.commons.collections.bag.TreeBag;
+import javax.net.ssl.SSLEngineResult.Status;
+
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import com.wb.business.basedata.AppBean;
 import com.wb.business.chatroom.ChatManager;
+import com.wb.business.chatroom.Room;
 import com.wb.business.chatroom.UserInfo;
-import com.wb.business.wxUtils.ConvertUtils;
 import com.wb.jpa.DataAdpter;
 
 /**
@@ -22,7 +24,13 @@ import com.wb.jpa.DataAdpter;
 public class CommonMsgHandler {
 
 	
+			
+			
+	
+	public static ExecutorService cachedThreadPool = Executors.newCachedThreadPool();  
 
+	
+	
 	/**
 	 * 
 	* <p>Title: textMsgHandler</p>
@@ -31,75 +39,186 @@ public class CommonMsgHandler {
 	* @return
 	 */
 	public static String textMsgHandler(Map<String, String> result) {
-		String insertSql = "insert into wx_receive_msg(tousername, fromusername, createtime,"
-				+ "	createtimedate, msgtype, content,msgid)"
-				+ "	values(?,?,?,?,?,?,?)";
-		DataAdpter da = new DataAdpter();
-		JdbcTemplate jt = da.getJdbcTemplate();
-		int insCnt = jt.update(insertSql, new Object[]{
-				result.get("ToUserName"),
-				result.get("FromUserName"),
-				Integer.parseInt(result.get("CreateTime")),
-				new Date(Long.parseLong(result.get("CreateTime")) * 1000L),
-				result.get("MsgType"),
-				result.get("Content"),
-				Long.parseLong(result.get("MsgId"))
-		});
-		System.out.println(insCnt);
-		
 		String _content = result.get("Content");
+		String _fromId = result.get("FromUserName");
+		String _toId = result.get("ToUserName");
+		String _msgType = MsgType.TEXT;
+		Long _msgId = Long.parseLong(result.get("MsgId"));
+		
+		insertTextMsgToDB(result);
+		
 		_content = _content==null?"":_content.toLowerCase();
 		
 		Map<String, String> newMap = null;
 		
+		String xmlStr = null;
 		switch (_content) {
-			case "lt":
-				newMap = ReturnMsg.setTextMsgMap(result.get("FromUserName"),
-						result.get("ToUserName"), (new Date().getTime()) / 1000,
-						result.get("MsgType"), "正在努力为你配对，请稍等……");
-	
+			case "lt":{
 				UserInfo ui = new UserInfo();
-				ui.userId = result.get("FromUserName");
+				ui.userId = _fromId;
+				ui.fromId = _toId;
 				ltHandler(ui);
-	
+				
 				break;
-			default:
-				newMap = ReturnMsg.setTextMsgMap(result.get("FromUserName"),
-						result.get("ToUserName"), (new Date().getTime()) / 1000,
-						result.get("MsgType"), "找人聊天请回复【lt】");
+			}
+			case "tc":{
+				UserInfo ui = new UserInfo();
+				ui.userId = _fromId;
+				ui.fromId = _toId;
+				tcHandler(ui);
+				
 				break;
+			}
+			default:{
+				UserInfo ui = ChatManager.getUserInfo(_fromId);
+				if( ui != null){
+					sendOthersMsg(ui, _content);
+					
+					break;
+				}else {
+					newMap = ReturnMsg.setTextMsgMap(_fromId,
+							_toId, (new Date().getTime()) / 1000,
+							_msgType, AppBean.MENU);
+					
+					//将String[]转化为list，生成xml格式
+					xmlStr = ReturnMsg.returnTextMsg(newMap);
+					
+					
+					
+					break;
+				}
+			}
+				
 		}
-			
-		//将String[]转化为list，生成xml格式
 		
+		updateResponseToDB(_msgId);
 		
-		String xmlStr = ReturnMsg.returnTextMsg(newMap);
-		
-		
-		if(xmlStr != null){
-			String updateSql = "update wx_receive_msg set isresponsed = 1 where msgid = ?";
-			jt.update(updateSql, Long.parseLong(result.get("MsgId")));
-			
-			return xmlStr;
-		}
-		
-		return null;
+		return xmlStr;
 	}
 
 	
 	
 	
-	public static void ltHandler(UserInfo ui){
-		Thread t = new Thread(new Runnable(){
-		    @Override
-		    public void run() {
-		    	System.out.println(111);
-		    	int roomStatus = ChatManager.arrangeRoom(ui);
-		    	System.out.println(roomStatus);
-		    }
-		});
-		t.start();
+	
+
+
+
+
+	private static void sendOthersMsg(UserInfo ui, String content) {
+
+		System.out.println(ui.userId);
+		Room room = ChatManager.getRoomById(ui.roomId);
+		if(room != null){
+			String[] users = room.getAllUserId();
+			for (String uid : users) {
+
+				if (uid.equals(ui.userId))
+					continue;
+
+				ReturnMsg.sendTextMsg(uid, MsgType.TEXT, content);
+			}
+		}
+	}
+
+
+
+
+
+
+
+
+	public static void ltHandler(UserInfo fromui){
+
+		try {
+			Thread.sleep(500);
+		} catch (InterruptedException e) {
+
+			e.printStackTrace();
+		}
+		System.out.println(fromui.userId);
+		int roomStatus = ChatManager.arrangeRoom(fromui);
+		if (roomStatus >= 0) {
+			String ltContent = "有朋友向你打了声招呼，回复消息和Ta聊天吧。\n" + 
+						"退出聊天请回复【TC】";
+			Room room = ChatManager.getRoomById(roomStatus);
+			String[] users = room.getAllUserId();
+			System.out.println("room users: " + users.length);
+			for (String uid : users) {
+				
+				ReturnMsg.sendTextMsg(uid, MsgType.TEXT, ltContent);
+				
+			}
+
+		} else if(roomStatus == ChatManager.HASJOIN){
+			String ltContent = "你已加入聊天室，退出请回复【TC】";
+			
+			ReturnMsg.sendTextMsg(fromui.userId, MsgType.TEXT, ltContent);
+		} else if(roomStatus == ChatManager.WAIT){
+			String ltContent = "正在努力为你配对，请稍等……";
+			
+			ReturnMsg.sendTextMsg(fromui.userId, MsgType.TEXT, ltContent);
+			
+		} 
+		//System.out.println(roomStatus);
+			
+		
 	}
 	
+	
+	private static void tcHandler(UserInfo fromui) {
+		if(ChatManager.getUserInfo(fromui.userId) == null){
+			String content = "你尚未进入聊天室，找人聊天请回复【LT】";
+			ReturnMsg.sendTextMsg(fromui.userId, MsgType.TEXT, content);
+
+		}else {
+			String content = "你已退出聊天，祝你天天开心～～";
+			ReturnMsg.sendTextMsg(fromui.userId, MsgType.TEXT, content);
+			
+			String otherContent = "对方已退出聊天,你已自动退出。";
+			sendOthersMsg(fromui, otherContent);
+			ChatManager.cleanByRoomId(fromui.roomId);
+		}
+		
+	}
+	
+	
+	private static void insertTextMsgToDB(Map<String, String> result){
+		cachedThreadPool.execute(new Runnable() {
+			
+			@Override
+			public void run() {
+				String insertSql = "insert into wx_receive_msg(tousername, fromusername, createtime,"
+						+ "	createtimedate, msgtype, content,msgid)"
+						+ "	values(?,?,?,?,?,?,?)";
+				DataAdpter da = new DataAdpter();
+				JdbcTemplate jt = da.getJdbcTemplate();
+				int insCnt = jt.update(insertSql, new Object[]{
+						result.get("ToUserName"),
+						result.get("FromUserName"),
+						Integer.parseInt(result.get("CreateTime")),
+						new Date(Long.parseLong(result.get("CreateTime")) * 1000L),
+						result.get("MsgType"),
+						result.get("Content"),
+						Long.parseLong(result.get("MsgId"))
+				});
+				System.out.println("insertTextMsgToDB count = " + insCnt);
+			}
+		});
+	}
+	
+	private static void updateResponseToDB(Long msgId){
+		cachedThreadPool.execute(new Runnable() {
+
+			@Override
+			public void run() {
+
+				DataAdpter da = new DataAdpter();
+				JdbcTemplate jt = da.getJdbcTemplate();
+				String updateSql = "update wx_receive_msg set isresponsed = 1 where msgid = ?";
+				int updCnt = jt.update(updateSql, msgId);
+				System.out.println("updateResponseToDB count = " +updCnt);
+			}
+		});
+	}
 
 }

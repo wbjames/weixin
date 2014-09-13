@@ -1,9 +1,8 @@
 package com.wb.business.chatroom;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * <p>Title: ChatManager</p>
@@ -11,12 +10,14 @@ import java.util.Map;
  * @author wb_james
  * @date 2014年9月11日
  */
-@SuppressWarnings({"rawtypes", "unchecked"})
+@SuppressWarnings({})
 public class ChatManager {
 
-	public static int WAIT = -2;
-	public static int HASJOIN = 1;
 	public static int NOROOM = -1;
+	
+	public static int WAIT = -2;
+	
+	public static int HASJOIN = -3;
 	
 	public static int _roomSize = 100;
 	
@@ -24,10 +25,10 @@ public class ChatManager {
 	
 	//聊天user.id->user
 	
-	private static Map<String, UserInfo> _userMap = new HashMap<String, UserInfo>();
+	private static Map<String, UserInfo> _userMap = new ConcurrentHashMap<String, UserInfo>();
 
 	//
-	private static Map<Integer, Room> rooms = new HashMap<Integer, Room>();
+	private static Map<Integer, Room> _roomMap = new ConcurrentHashMap<Integer, Room>();
 	
 	public static int arrangeRoom(UserInfo user){
 		String userId = user.userId;
@@ -45,10 +46,13 @@ public class ChatManager {
 
 			int roomId = currentRoom.getId();
 			currentRoom.joinOne(userId);
-			rooms.put(roomId, currentRoom);
+			
+			user.roomId = roomId;
+			_userMap.put(userId, user);
+			_roomMap.put(roomId, currentRoom);
 			
 			
-			currentRoom = CreateRoomFactory.getOneRoom();;
+			currentRoom = CreateRoomFactory.getOneRoom();
 			return roomId;
 		}
 		
@@ -56,7 +60,45 @@ public class ChatManager {
 	}
 	
 	public static Room getRoomById(int roomId){
-		return rooms.get(roomId);
+		return _roomMap.get(roomId);
 	}
 	
+	
+	public static UserInfo getUserInfo(String uid){
+		return _userMap.get(uid);
+	}
+	
+	public static void removeUserByUserId(String userId){
+		_userMap.remove(userId);
+	}
+	
+	public static void removeUserByRoomId(int roomId){
+		if(roomId == currentRoom.getId()){
+			String[] users = currentRoom.getAllUserId();
+			for(String uid: users){
+				removeUserByUserId(uid);
+			}
+		}else {
+			Room room = getRoomById(roomId);
+			String[] users = room.getAllUserId();
+			for(String uid: users){
+				removeUserByUserId(uid);
+			}
+		}
+    	
+	}
+	
+	public static void removeRoomByRoomId(int roomId){
+		if(roomId == currentRoom.getId()){
+			currentRoom.cleanRoom();
+		}else {
+			_roomMap.remove(roomId);
+		}
+		
+	}
+	
+	public static void cleanByRoomId(int roomId){
+		removeUserByRoomId(roomId);
+		removeRoomByRoomId(roomId);
+	}
 }

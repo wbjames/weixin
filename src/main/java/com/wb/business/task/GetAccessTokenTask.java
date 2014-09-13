@@ -1,13 +1,7 @@
 package com.wb.business.task;
 
-import java.io.File;
-import java.io.InputStream;
-import java.net.URI;
-import java.net.URL;
 import java.util.TimerTask;
 import java.util.logging.Logger;
-
-import javax.servlet.ServletContext;
 
 import net.sf.json.JSONObject;
 
@@ -19,7 +13,6 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 
 import com.wb.business.basedata.AppBean;
-import com.wb.business.wxUtils.MediaUtils;
 
 /**
  * <p>Title: GetAccessTokenTask</p>
@@ -36,6 +29,7 @@ public class GetAccessTokenTask extends TimerTask{
 			if (token != null) {
 				AppBean._accessToken = token;
 			}
+			System.out.println(token);
 			
 			//String s = new MediaUtils().upload(token, "image", new File(getClass().getResource("/").getPath() +"/touxiang.jpg"));
 			//System.out.println(s);

@@ -1,7 +1,10 @@
 package com.wb.business.chatroom;
 
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+
 
 /**
  * <p>Title: OneRoom</p>
@@ -53,5 +56,10 @@ public class Room {
 	
 	public void cleanRoom(){
 		userSet.clear();
+	}
+	
+	public String[] getAllUserId(){
+		String[] userIdArr =  (String[])userSet.toArray(new String[userSet.size()]);
+		return userIdArr;
 	}
 }

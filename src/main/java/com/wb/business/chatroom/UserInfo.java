@@ -12,5 +12,7 @@ public class UserInfo {
 	
 	public String userName;
 	
+	public String fromId;
+	
 	public int roomId;
 }

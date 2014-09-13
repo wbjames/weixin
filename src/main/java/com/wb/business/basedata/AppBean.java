@@ -21,4 +21,13 @@ public class AppBean {
 	public static final String UPLOAD_MEDIA_BASE_URL = "http://file.api.weixin.qq.com/cgi-bin/media/upload";
 	
 	public static final String GET_MEDIA_BASE_URL = "http://file.api.weixin.qq.com/cgi-bin/media/get";
+	
+	public static final String SENDBASEURL = "https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token=";
+	
+	public static final String MENU = "回复指令	功能说明\n"
+			+ "LT	找人聊天	(LT)\n"
+//			+ "EN#	中译英，如(EN#学习)\n"
+//			+ "ZH#	英译中，如(ZH#love)\n+"
+//			+ "指令代码不区分大小写，如(en#学习）。"
+			;
 }
