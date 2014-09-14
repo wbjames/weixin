@@ -2,10 +2,6 @@ package com.wb.business.wxMsgHandler;
 
 import java.util.Date;
 import java.util.Map;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
-import javax.net.ssl.SSLEngineResult.Status;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 
@@ -13,6 +9,7 @@ import com.wb.business.basedata.AppBean;
 import com.wb.business.chatroom.ChatManager;
 import com.wb.business.chatroom.Room;
 import com.wb.business.chatroom.UserInfo;
+import com.wb.business.translate.LangTranslate;
 import com.wb.jpa.DataAdpter;
 
 /**
@@ -23,13 +20,7 @@ import com.wb.jpa.DataAdpter;
  */
 public class CommonMsgHandler {
 
-	
-			
-			
-	
-	public static ExecutorService cachedThreadPool = Executors.newCachedThreadPool();  
 
-	
 	
 	/**
 	 * 
@@ -70,6 +61,21 @@ public class CommonMsgHandler {
 				break;
 			}
 			default:{
+				if(_content.startsWith("fy")){
+//					String fyResult = new LangTranslate().translate(_content.substring(3));
+//					newMap = ReturnMsg.setTextMsgMap(_fromId,
+//							_toId, (new Date().getTime()) / 1000,
+//							_msgType, fyResult);
+//					
+//					//将String[]转化为list，生成xml格式
+//					xmlStr = ReturnMsg.returnTextMsg(newMap);	
+					//LangTranslate().translate
+					
+					new LangTranslate().sendResult(_fromId, _toId, _content.substring(2));
+					break;
+				}
+				
+				
 				UserInfo ui = ChatManager.getUserInfo(_fromId);
 				if( ui != null){
 					sendOthersMsg(ui, _content);
@@ -82,9 +88,6 @@ public class CommonMsgHandler {
 					
 					//将String[]转化为list，生成xml格式
 					xmlStr = ReturnMsg.returnTextMsg(newMap);
-					
-					
-					
 					break;
 				}
 			}
@@ -183,7 +186,7 @@ public class CommonMsgHandler {
 	
 	
 	public static void insertTextMsgToDB(Map<String, String> result){
-		cachedThreadPool.execute(new Runnable() {
+		AppBean.cachedThreadPool.execute(new Runnable() {
 			
 			@Override
 			public void run() {
@@ -207,7 +210,7 @@ public class CommonMsgHandler {
 	}
 	
 	public static void updateResponseToDB(Long msgId){
-		cachedThreadPool.execute(new Runnable() {
+		AppBean.cachedThreadPool.execute(new Runnable() {
 
 			@Override
 			public void run() {

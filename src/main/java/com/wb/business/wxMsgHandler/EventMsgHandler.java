@@ -1,15 +1,11 @@
 package com.wb.business.wxMsgHandler;
 
-import java.io.IOException;
 import java.util.Date;
 import java.util.Map;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import net.sf.json.JSONObject;
 
 import org.apache.http.HttpEntity;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -28,7 +24,6 @@ import com.wb.jpa.DataAdpter;
  */
 public class EventMsgHandler {
 
-	public static ExecutorService cachedThreadPool = Executors.newCachedThreadPool();  
 	
 	public static String eventMsgHandler(Map<String, String> result) {
 		
@@ -42,7 +37,7 @@ public class EventMsgHandler {
 
 	public static void saveUserInfoToDB(String uid, String appid) {
 		
-		cachedThreadPool.execute(new Runnable() {
+		AppBean.cachedThreadPool.execute(new Runnable() {
 			
 			@Override
 			public void run() {
@@ -120,9 +115,7 @@ public class EventMsgHandler {
 			        }
 					
 					
-				} catch (ClientProtocolException e) {
-					e.printStackTrace();
-				} catch (IOException e) {
+				} catch (Exception e) {
 					e.printStackTrace();
 				}
 		        

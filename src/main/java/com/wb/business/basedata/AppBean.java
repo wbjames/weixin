@@ -1,5 +1,8 @@
 package com.wb.business.basedata;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 /**
  * <p>Title: AppBean</p>
  * <p>Description: 微信的全局信息</p>
@@ -28,10 +31,27 @@ public class AppBean {
 	
 	public static final String SENDBASEURL = "https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token=";
 	
+	//有道翻译API
+	//http://fanyi.youdao.com/openapi.do?keyfrom=<keyfrom>&key=<key>&type=data&doctype=<doctype>&version=1.1&q=要翻译的文本
+	public static final String LANG_TRANS_YD_URL = "http://fanyi.youdao.com/openapi.do?"
+													+ "keyfrom=womenaixuexi"
+													+ "&key=218016019"
+													+ "&type=data"
+													+ "&doctype=json"
+													+ "&version=1.1"
+													+ "&q=";
+	
+	
+	
+	
 	public static final String MENU = "回复指令	功能说明\n"
-			+ "LT	找人聊天	(LT)\n"
-//			+ "EN#	中译英，如(EN#学习)\n"
+			+ "LT	找人聊天	如(LT)\n\n"
+			+ "FY	翻译，如(FY学习)\n\n"
 //			+ "ZH#	英译中，如(ZH#love)\n+"
-//			+ "指令代码不区分大小写，如(en#学习）。"
+			+ "指令代码不区分大小写，如(fygood morning!）。"
 			;
+	
+	public static ExecutorService cachedThreadPool = Executors.newCachedThreadPool();
+	
+	
 }

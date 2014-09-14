@@ -1,6 +1,5 @@
 package com.wb.business.chatroom;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
