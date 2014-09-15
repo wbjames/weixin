@@ -28,7 +28,7 @@ public class StartInitListener implements ServletContextListener {
 			
 			e.printStackTrace();
 		}
-		System.out.println("CommonMsgHandler.cachedThreadPool is shutdown!");
+		System.out.println("AppBean.cachedThreadPool is shutdown!");
 	}
 
 	@Override

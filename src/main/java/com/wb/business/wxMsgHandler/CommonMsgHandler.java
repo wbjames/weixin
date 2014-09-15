@@ -61,7 +61,7 @@ public class CommonMsgHandler {
 				break;
 			}
 			default:{
-				if(_content.startsWith("fy")){
+				if(_content.startsWith("fy") || _content.startsWith("翻译")){
 //					String fyResult = new LangTranslate().translate(_content.substring(3));
 //					newMap = ReturnMsg.setTextMsgMap(_fromId,
 //							_toId, (new Date().getTime()) / 1000,

@@ -16,6 +16,7 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 
 import com.wb.business.basedata.AppBean;
+import com.wb.business.task.GetAccessTokenTask;
 import com.wb.business.wxUtils.ConvertUtils;
 
 /**
@@ -104,7 +105,12 @@ public class ReturnMsg {
 	         JSONObject object = JSONObject.fromObject(_jsonBody);
 	         if(object.getInt("errcode") == -1){
 	        	 sendTextMsg(touser,msgtype, content); 
+	         }else if(object.getInt("errcode") == 40001){
+	        	 new GetAccessTokenTask().run();
+	        	 Thread.sleep(3000);
+	        	 sendTextMsg(touser,msgtype, content); 
 	         }else {
+	        	 // TODO 通知管理员
 	        	 log.info("errcode:" + object.getInt("errcode"));
 	        	 log.info("errmsg:" + object.getString("errmsg"));
 	         }
