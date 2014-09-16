@@ -17,6 +17,7 @@ import org.apache.http.util.EntityUtils;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import com.wb.business.basedata.AppBean;
+import com.wb.business.joke.JokeFactory;
 import com.wb.jpa.DataAdpter;
 
 /**
@@ -85,6 +86,10 @@ public class GetAccessTokenTask extends TimerTask{
 //			
 //			Thread.sleep(2000);
 //			new LangTranslate().sendResult("o3nDIjlamLDcpeRIXxAYZ8_3fwBg", "gh_47e2bcb932e0", "我就是想测试一下到底灵不灵光");
+			
+//			new JokeFactory().provideOneJoke("o3nDIjlamLDcpeRIXxAYZ8_3fwBg", "gh_47e2bcb932e0");
+			
+			
 			
 		} catch (Exception e) {
 			e.printStackTrace();

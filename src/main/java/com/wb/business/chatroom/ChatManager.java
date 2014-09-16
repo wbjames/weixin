@@ -52,6 +52,7 @@ public class ChatManager {
 			
 			
 			currentRoom = CreateRoomFactory.getOneRoom();
+			System.out.println("currentRoom id = " + currentRoom.getId());
 			return roomId;
 		}
 		
@@ -79,9 +80,14 @@ public class ChatManager {
 			}
 		}else {
 			Room room = getRoomById(roomId);
-			String[] users = room.getAllUserId();
-			for(String uid: users){
-				removeUserByUserId(uid);
+			if(room != null) {
+				String[] users = room.getAllUserId();
+				for(String uid: users){
+					removeUserByUserId(uid);
+				}
+			}else {
+				
+				System.out.println("#2 clean RoomId is: " + roomId + "============ currentRoomid is " + currentRoom.getId());
 			}
 		}
     	
@@ -97,6 +103,7 @@ public class ChatManager {
 	}
 	
 	public static void cleanByRoomId(int roomId){
+		System.out.println("#1 clean RoomId is: " + roomId + "============ currentRoomid is " + currentRoom.getId());
 		removeUserByRoomId(roomId);
 		removeRoomByRoomId(roomId);
 	}

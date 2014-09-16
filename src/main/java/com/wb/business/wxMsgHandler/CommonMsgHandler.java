@@ -9,6 +9,7 @@ import com.wb.business.basedata.AppBean;
 import com.wb.business.chatroom.ChatManager;
 import com.wb.business.chatroom.Room;
 import com.wb.business.chatroom.UserInfo;
+import com.wb.business.joke.JokeFactory;
 import com.wb.business.translate.LangTranslate;
 import com.wb.jpa.DataAdpter;
 
@@ -58,6 +59,10 @@ public class CommonMsgHandler {
 				ui.fromId = _toId;
 				tcHandler(ui);
 				
+				break;
+			}
+			case "xh":{
+				new JokeFactory().provideOneJoke(_fromId, _toId);
 				break;
 			}
 			default:{

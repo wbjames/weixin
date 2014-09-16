@@ -41,12 +41,15 @@ public class AppBean {
 													+ "&version=1.1"
 													+ "&q=";
 	
+	//小笑话API http://blog.163.com/lixiangqiu_9202/blog/static/53575037201431004512475/
+	public static final String JOKE_URL = "http://brisk.eu.org/api/joke.php";
 	
-	
+	public static final int JOKE_TOTAL = 9720;
 	
 	public static final String MENU = "回复指令	功能说明\n"
 			+ "LT	找人聊天	如(LT)\n\n"
 			+ "FY	翻译，如(FY学习)\n\n"
+			+ "XH	一则笑话，如(XH)\n\n"
 //			+ "ZH#	英译中，如(ZH#love)\n+"
 			+ "指令代码不区分大小写，如(fygood morning!）。"
 			;
