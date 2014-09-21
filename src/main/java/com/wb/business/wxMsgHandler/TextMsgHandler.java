@@ -19,7 +19,7 @@ import com.wb.jpa.DataAdpter;
  * @author wb_james
  * @date 2014年9月9日
  */
-public class CommonMsgHandler {
+public class TextMsgHandler {
 
 
 	
@@ -35,9 +35,9 @@ public class CommonMsgHandler {
 		String _fromId = result.get("FromUserName");
 		String _toId = result.get("ToUserName");
 		String _msgType = MsgType.TEXT;
-		Long _msgId = Long.parseLong(result.get("MsgId"));
+		String _msgId = result.get("MsgId");
 		
-		insertTextMsgToDB(result);
+		DBHandler.insertTextMsgToDB(result);
 		
 		_content = _content==null?"":_content.toLowerCase();
 		
@@ -99,7 +99,7 @@ public class CommonMsgHandler {
 				
 		}
 		
-		updateResponseToDB(_msgId);
+		DBHandler.updateResponseToDB(_msgId);
 		
 		return xmlStr;
 	}
@@ -190,43 +190,6 @@ public class CommonMsgHandler {
 	}
 	
 	
-	public static void insertTextMsgToDB(Map<String, String> result){
-		AppBean.cachedThreadPool.execute(new Runnable() {
-			
-			@Override
-			public void run() {
-				String insertSql = "insert into wx_receive_msg(tousername, fromusername, createtime,"
-						+ "	createtimedate, msgtype, content,msgid)"
-						+ "	values(?,?,?,?,?,?,?)";
-				DataAdpter da = new DataAdpter();
-				JdbcTemplate jt = da.getJdbcTemplate();
-				int insCnt = jt.update(insertSql, new Object[]{
-						result.get("ToUserName"),
-						result.get("FromUserName"),
-						Integer.parseInt(result.get("CreateTime")),
-						new Date(Long.parseLong(result.get("CreateTime")) * 1000L),
-						result.get("MsgType"),
-						result.get("Content"),
-						Long.parseLong(result.get("MsgId"))
-				});
-				System.out.println("insertTextMsgToDB count = " + insCnt);
-			}
-		});
-	}
 	
-	public static void updateResponseToDB(Long msgId){
-		AppBean.cachedThreadPool.execute(new Runnable() {
-
-			@Override
-			public void run() {
-
-				DataAdpter da = new DataAdpter();
-				JdbcTemplate jt = da.getJdbcTemplate();
-				String updateSql = "update wx_receive_msg set isresponsed = 1 where msgid = ?";
-				int updCnt = jt.update(updateSql, msgId);
-				System.out.println("updateResponseToDB count = " +updCnt);
-			}
-		});
-	}
 
 }

@@ -24,8 +24,11 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
-import com.wb.business.wxMsgHandler.CommonMsgHandler;
+import com.wb.business.wxMsgHandler.TextMsgHandler;
 import com.wb.business.wxMsgHandler.EventMsgHandler;
+import com.wb.business.wxMsgHandler.ImageMsgHandler;
+import com.wb.business.wxMsgHandler.VideoMsgHandler;
+import com.wb.business.wxMsgHandler.VoiceMsgHandler;
 import com.wb.common.Application;
 
 /**
@@ -117,8 +120,17 @@ public class WeixinController {
 				}
 				switch (result.get("MsgType")) {
 				case "text":
-					return CommonMsgHandler.textMsgHandler(result);
+					return TextMsgHandler.textMsgHandler(result);
 
+				case "image":
+					return ImageMsgHandler.imageMsgHandler(result);
+					
+				case "voice":
+					return VoiceMsgHandler.voiceMsgHandler(result);
+				
+				case "video":
+					return VideoMsgHandler.videoMsgHandler(result);
+					
 				case "event":
 					return EventMsgHandler.eventMsgHandler(result);
 					

@@ -3,6 +3,8 @@ package com.wb.business.wxMsgHandler;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 import java.util.logging.Logger;
 
 import net.sf.json.JSONObject;
@@ -61,7 +63,7 @@ public class ReturnMsg {
 	}
 	
 	
-	public static void sendTextMsg(String touser, String msgtype, String content){
+	public static void sendCommonMsg(String touser, String msgtype, Map<String, String> returnMap){
 		CloseableHttpClient httpclient = HttpClients.createDefault(); 
     	
     	HttpPost httppost = new HttpPost(AppBean.SENDBASEURL + AppBean._accessToken);
@@ -70,7 +72,9 @@ public class ReturnMsg {
     	json.put("touser", touser);
     	json.put("msgtype", msgtype);
     	JSONObject jsonContent = new JSONObject();
-    	jsonContent.put("content", content);
+    	for(Entry<String, String> entry : returnMap.entrySet()){
+    		jsonContent.put(entry.getKey(), entry.getValue());
+    	}
     	json.put(msgtype, jsonContent.toString());
     	
     	String jsonString = json.toString();
@@ -104,11 +108,11 @@ public class ReturnMsg {
 
 	         JSONObject object = JSONObject.fromObject(_jsonBody);
 	         if(object.getInt("errcode") == -1){
-	        	 sendTextMsg(touser,msgtype, content); 
+	        	 sendCommonMsg(touser,msgtype, returnMap); 
 	         }else if(object.getInt("errcode") == 40001){
 	        	 new GetAccessTokenTask().run();
 	        	 Thread.sleep(3000);
-	        	 sendTextMsg(touser,msgtype, content); 
+	        	 sendCommonMsg(touser,msgtype, returnMap); 
 	         }else {
 	        	 // TODO 通知管理员
 	        	 log.info("errcode:" + object.getInt("errcode"));
@@ -117,7 +121,46 @@ public class ReturnMsg {
 	         
 		} catch (Exception e) {
 			e.printStackTrace();
-			log.info("ReturnMsg.sendTextMsg exception#2: " + e.getMessage());
+			log.info("ReturnMsg.sendCommonMsg exception#2: " + e.getMessage());
 		}
+	}
+	
+	
+	public static void sendTextMsg(String touser, String msgtype, String content){
+		Map<String, String> returnMap = new HashMap<String, String>();
+		returnMap.put("content", content);
+		sendCommonMsg(touser, msgtype, returnMap);
+	}
+	
+	
+	public static void sendImageMsg(String touser, String msgtype, String media_id){
+		Map<String, String> returnMap = new HashMap<String, String>();
+		returnMap.put("media_id", media_id);
+		sendCommonMsg(touser, msgtype, returnMap);
+	}
+	
+	public static void sendVoiceMsg(String touser, String msgtype, String media_id){
+		Map<String, String> returnMap = new HashMap<String, String>();
+		returnMap.put("media_id", media_id);
+		sendCommonMsg(touser, msgtype, returnMap);
+	}
+	
+	public static void sendVideoMsg(String touser, String msgtype, String media_id, String thumb_media_id, String title, String description){
+		Map<String, String> returnMap = new HashMap<String, String>();
+		returnMap.put("media_id", media_id);
+		returnMap.put("thumb_media_id", thumb_media_id);
+		returnMap.put("title", title);
+		returnMap.put("description", description);
+		sendCommonMsg(touser, msgtype, returnMap);
+	}
+	
+	public static void sendMusicMsg(String touser, String msgtype, String title, String description, String musicurl, String hqmusicurl, String thumb_media_id){
+		Map<String, String>returnMap = new HashMap<String, String>();
+		returnMap.put("title", title);
+		returnMap.put("description", description);
+		returnMap.put("musicurl", musicurl);
+		returnMap.put("hqmusicurl", hqmusicurl);
+		returnMap.put("thumb_media_id", thumb_media_id);
+		sendCommonMsg(touser, msgtype, returnMap);
 	}
 }

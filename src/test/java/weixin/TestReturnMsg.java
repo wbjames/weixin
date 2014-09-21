@@ -5,6 +5,7 @@ import junit.framework.TestCase;
 import com.wb.business.basedata.AppBean;
 import com.wb.business.joke.JokeFactory;
 import com.wb.business.translate.LangTranslate;
+import com.wb.business.wxMsgHandler.ImageMsgHandler;
 import com.wb.business.wxMsgHandler.ReturnMsg;
 
 /**
@@ -29,10 +30,12 @@ public class TestReturnMsg extends TestCase {
 //	}
 	
 	//2014-09-16日测试
-	public void testJoke(){
-		JokeFactory jf = new JokeFactory();
-		jf.getJoke();
-		AppBean._accessToken = "Kw4q-Zut4M0Jx3cKbJGLkwYJ-VZQADn5b8bScYqcYl27_YsyV4F4MaQzon1JM0WBKK0c7yS6Z3H-KjH6X6xXRQ";
-		jf.provideOneJoke("o3nDIjlamLDcpeRIXxAYZ8_3fwBg", "gh_47e2bcb932e0");
-	}
+//	public void testJoke(){
+//		JokeFactory jf = new JokeFactory();
+//		jf.getJoke();
+//		AppBean._accessToken = "Kw4q-Zut4M0Jx3cKbJGLkwYJ-VZQADn5b8bScYqcYl27_YsyV4F4MaQzon1JM0WBKK0c7yS6Z3H-KjH6X6xXRQ";
+//		jf.provideOneJoke("o3nDIjlamLDcpeRIXxAYZ8_3fwBg", "gh_47e2bcb932e0");
+//	}
+	
+	
 }
