@@ -149,8 +149,8 @@ public class ReturnMsg {
 		Map<String, String> returnMap = new HashMap<String, String>();
 		returnMap.put("media_id", media_id);
 		returnMap.put("thumb_media_id", thumb_media_id);
-		returnMap.put("title", title);
-		returnMap.put("description", description);
+		//returnMap.put("title", title);
+		//returnMap.put("description", description);
 		sendCommonMsg(touser, msgtype, returnMap);
 	}
 	

@@ -172,11 +172,11 @@ public class TestWeixin extends TestCase {
 //		}
 	
 	public void testSendCommonMsg(){
-		AppBean._accessToken = "yRqcoaU0ze61zThoOvCIwIJhlKh_xXv1OQw5PRN8eu19BgOm0iSTTGvbP_0a56XyJorpnUiy5R5gLC6d3cQsDQ";
+		AppBean._accessToken = "VmjKjLRuOlgEQORmxOjF9qJ2JHGY4WpabMiXQQuBdjcziqAeO2e3SNQrJYP9P5fsmdvAwTlvB4COD8wpAp8Fpw";
 		
 		//ReturnMsg.sendVoiceMsg("o3nDIjlamLDcpeRIXxAYZ8_3fwBg", MsgType.VOICE, "_jKdoBijhl1El09PPlEtlwujq11JvjUlEtHAAoo7-hhg10_-_nAnPTyq_8g2Da2H");
 		
-		ReturnMsg.sendVideoMsg("o3nDIjlamLDcpeRIXxAYZ8_3fwBg", MsgType.VIDEO, "4tMh4XoABNEx6FxYeFy4dsRFO0lKCK7cVMiCnv8AX6KTZ5rb2JK4TnwzniKtLshUh_4KA5R7TIqyY5iEC52Ysw", "fhhsWOCEGkngDP2JS4Qz1eLAqUXAynqVIsYv6V1jl--hF4dM9Y4PPy4WUQY4EaID", null, null);
+		ReturnMsg.sendVideoMsg("o3nDIjlamLDcpeRIXxAYZ8_3fwBg", MsgType.VIDEO, "2RcbRAeyh_d6LnC-az2tHkGOx8jmdx4OIt_1BDHdn3flfriUZyBAbZ_NlwEYbiqZ", "zbVrzxG6JL1dsDc0KLH8Qq3-1f6uCFhFT03h67cHsC4MKu0-zBVdIfRTpHVIWQW_", null, null);
 	}
 	
 }
